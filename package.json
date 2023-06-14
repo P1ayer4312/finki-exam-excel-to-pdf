@@ -1,0 +1,22 @@
+{
+  "name": "excel-to-pdf",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "node ./esbuid_config/build.js",
+    "watch": "node ./esbuid_config/watch.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "P1ayer",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.42.0"
+  },
+  "dependencies": {
+    "esbuild": "0.18.0",
+    "pdfmake": "^0.2.7",
+    "xlsx": "^0.18.5"
+  }
+}
