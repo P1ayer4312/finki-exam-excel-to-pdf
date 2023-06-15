@@ -29,7 +29,7 @@ export default function CreatePDF(data) {
 					{ text: subject.name, style: 'subject', unbreakable: true },
 					{ text: subject.year, style: 'subject', fillColor: `#${subject.yearColor}`, unbreakable: true },
 					{ text: time, style: 'subject', unbreakable: true },
-					{ text: subject.locations.length ? subject.locations.join(', ') : 'kurac', style: 'subject', unbreakable: true }
+					{ text: subject.locations.length ? subject.locations.join(', ') : '', style: 'subject', unbreakable: true }
 				]
 			);
 		});
