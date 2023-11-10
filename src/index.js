@@ -1,114 +1,150 @@
-import * as XLSX from 'xlsx';
-import ConvertMergesToCellData from './functions/ConvertMergesToCellData';
-import GetLocationsAndTime from './functions/GetLocationsAndTime';
-import GetLargeCells from './functions/GetLargeCells';
-import GetYears from './functions/GetYears';
-import hexColorDelta from './functions/hexColorDelta';
-import CreatePDF from './functions/CreatePDF';
+import * as XLSX from "xlsx";
+import ConvertMergesToCellData from "./functions/ConvertMergesToCellData";
+import GetLocationsAndTime from "./functions/GetLocationsAndTime";
+import GetLargeCells from "./functions/GetLargeCells";
+import GetYears from "./functions/GetYears";
+import CreatePDF from "./functions/CreatePDF";
+import ParseUnscheduledSubjects from "./functions/ParseUnscheduledSubjects";
+import "./functions/typedefs";
+import GetYearByColor from "./functions/GetYearByColor";
 
 // DOM elements
 const DOM = {
-	/** @type {HTMLInputElement | null} */
-	inputFile: document.getElementById('inputFile'),
-	status: document.getElementById('status'),
-	setStatus: (message) => {
-		DOM.status.innerText = message;
-	}
-}
+  /** @type {HTMLInputElement | null} */
+  inputFile: document.getElementById("inputFile"),
+  /** @type {HTMLSpanElement | null} */
+  status: document.getElementById("status"),
+  /** @type {HTMLInputElement | null} */
+  disableColors: document.getElementById("disableColors"),
+  /** @type {HTMLDivElement | null} */
+  errorBlock: document.getElementById("errorBlock"),
+  setStatus: (message) => {
+    DOM.status.innerText = message;
+  },
+  showError: (message) => {
+    DOM.errorBlock.innerHTML = message;
+    DOM.errorBlock.style.setProperty("display", "block");
+  },
+  clearError: () => {
+    DOM.errorBlock.innerHTML = "";
+    DOM.errorBlock.style.setProperty("display", "none");
+  },
+};
 
 // Events
-DOM.inputFile.addEventListener('change', async () => {
-	DOM.setStatus('Reading Excel file...');
-	const file = DOM.inputFile.files[0];
-	const fileArrayBuffer = await file.arrayBuffer();
+DOM.inputFile.addEventListener("change", async () => {
+  try {
+    DOM.setStatus("Reading Excel file...");
+    const file = DOM.inputFile.files[0];
+    const fileArrayBuffer = await file.arrayBuffer();
 
-	const workbook = XLSX.read(fileArrayBuffer, {
-		cellStyles: true,
-		cellDates: true,
-	});
+    const workbook = XLSX.read(fileArrayBuffer, {
+      cellStyles: true,
+      cellDates: true,
+    });
 
-	ConvertMergesToCellData(workbook);
-	const parsedSheets = [];
+    ConvertMergesToCellData(workbook);
 
-	for (let sheetName of workbook.SheetNames) {
-		const locationAndTime = GetLocationsAndTime(
-			workbook.Sheets[sheetName]
-		);
+    /** @type {TParsedSheets[]} */
+    const parsedSheets = [];
 
-		const largeCells = GetLargeCells(
-			workbook.Sheets[sheetName],
-			locationAndTime.locationRow
-		);
+    /** @type {TYear | []} */
+    let years = null;
 
-		const years = GetYears(
-			workbook.Sheets[sheetName],
-			workbook.Sheets[sheetName]['A1'].range.width
-		);
+    for (let sheetName of workbook.SheetNames) {
+      // Set year colors
+      if (years === null) {
+        years = GetYears(workbook.Sheets[sheetName]);
+      }
 
-		const subjectsData = [];
-		for (let cell of largeCells) {
-			const currentCell = workbook.Sheets[sheetName][cell];
-			if (
-				cell.startsWith('A') ||
-				currentCell.w === '.' ||
-				currentCell.w.length < 3 ||
-				currentCell.s.patternType !== 'solid' // Check if it's colored
-			) {
-				// Skip cell if it's not a subject
-				continue;
-			}
+      // Check if the sheet contains unscheduled subjects
+      // This might breaks in the future depending on the sheet cell arrangement
+      if (workbook.Sheets[sheetName]["A1"].t !== "z") {
+        const unscheduled = ParseUnscheduledSubjects(
+          workbook.Sheets[sheetName],
+          years
+        );
 
-			// Start mapping subjects
-			let tempYear = years.find(el => el.color === currentCell.s.fgColor.rgb);
-			if (!tempYear) {
-				// Years colors and cell colors are different shade
-				// Find the approximate closest color
-				const colorDeltaArray = years.map(el => {
-					return hexColorDelta(el.color, currentCell.s.fgColor.rgb);
-				});
+        parsedSheets.push({
+          sheetName,
+          sheetTitle: [],
+          subjects: unscheduled,
+        });
 
-				const closestColorIndex = colorDeltaArray.indexOf(Math.max(...colorDeltaArray));
-				tempYear = years[closestColorIndex];
-			}
+        continue;
+      }
 
-			const subjectRowOffset = currentCell.range.colStart - 1;
-			const subjectLocations = locationAndTime.locations
-				.slice(subjectRowOffset, subjectRowOffset + currentCell.range.width);
+      const locationAndTime = GetLocationsAndTime(workbook.Sheets[sheetName]);
 
-			const timeRowOffset = currentCell.range.rowStart - locationAndTime.locationRow - 2;
-			const subjectTimeRange = locationAndTime.time
-				.slice(timeRowOffset, timeRowOffset + currentCell.range.height);
+      const largeCells = GetLargeCells(
+        workbook.Sheets[sheetName],
+        locationAndTime.locationRow
+      );
 
-			const subject = {
-				name: currentCell.w,
-				year: tempYear.year,
-				yearColor: tempYear.color,
-				locations: Array.from(new Set(subjectLocations)),
-				time: subjectTimeRange
-			}
+      const subjectsData = [];
+      for (let cell of largeCells) {
+        const currentCell = workbook.Sheets[sheetName][cell];
+        if (
+          cell.startsWith("A") ||
+          currentCell.w === "." ||
+          currentCell.w.length < 3 ||
+          currentCell.s.patternType !== "solid" // Check if it's colored
+        ) {
+          // Skip cell if it's not a subject
+          continue;
+        }
 
-			subjectsData.push(subject);
-		}
+        // Start mapping subjects
+        const subjectYear = GetYearByColor(years, currentCell.s.fgColor.rgb);
 
-		const sheetTitle = [];
-		for (let n = 1; n <= locationAndTime.locationRow; n++) {
-			sheetTitle.push(workbook.Sheets[sheetName][`A${n}`].w);
-		}
+        const subjectRowOffset = currentCell.range.colStart - 1;
+        const subjectLocations = locationAndTime.locations.slice(
+          subjectRowOffset,
+          subjectRowOffset + currentCell.range.width
+        );
 
-		parsedSheets.push({
-			sheetName,
-			sheetTitle,
-			subjects: subjectsData,
-			fileName: file.name,
-		});
-	}
+        const timeRowOffset =
+          currentCell.range.rowStart - locationAndTime.locationRow - 2;
+        const subjectTimeRange = locationAndTime.time.slice(
+          timeRowOffset,
+          timeRowOffset + currentCell.range.height
+        );
 
-	DOM.setStatus('Creating PDF file...');
+        const subject = {
+          name: currentCell.w,
+          year: subjectYear.year,
+          yearColor: subjectYear.color,
+          locations: Array.from(new Set(subjectLocations)),
+          time: subjectTimeRange,
+        };
 
-	CreatePDF({
-		fileName: file.name.slice(0, file.name.lastIndexOf('.')),
-		parsedSheets,
-	});
+        subjectsData.push(subject);
+      }
 
-	DOM.setStatus('Done');
+      const sheetTitle = [];
+      for (let n = 1; n <= locationAndTime.locationRow; n++) {
+        sheetTitle.push(workbook.Sheets[sheetName][`A${n}`].w);
+      }
+
+      parsedSheets.push({
+        sheetName,
+        sheetTitle,
+        subjects: subjectsData,
+      });
+    }
+
+    DOM.setStatus("Creating PDF file...");
+    CreatePDF({
+      fileName: file.name.slice(0, file.name.lastIndexOf(".")),
+      parsedSheets,
+      disableColors: DOM.disableColors.checked,
+    });
+
+    DOM.setStatus("Done");
+    // ===
+  } catch (error) {
+    console.error(error);
+    DOM.setStatus("Error ocurred");
+    DOM.showError(error.stack.replaceAll("\n", "<br>"));
+  }
 });

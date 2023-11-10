@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 export default function ConvertMergesToCellData(workbook) {
 	for (let sheetName of workbook.SheetNames) {
 		const sheet = workbook.Sheets[sheetName];
-		const merges = sheet['!merges'];
+		const merges = sheet['!merges'] ?? [];
 		merges.forEach(cell => {
 			const startLetter = String.fromCharCode(cell.s.c + 65);
 			const endLetter = String.fromCharCode(cell.e.c + 65);
