@@ -34,6 +34,7 @@ const DOM = {
 // Events
 DOM.inputFile.addEventListener("change", async () => {
   try {
+    DOM.clearError();
     DOM.setStatus("Reading Excel file...");
     const file = DOM.inputFile.files[0];
     const fileArrayBuffer = await file.arrayBuffer();

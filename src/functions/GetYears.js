@@ -1,8 +1,10 @@
 // eslint-disable-next-line no-unused-vars
 import * as XLSX from "xlsx";
+import "./typedefs";
 /**
  * Find the years column and store the values
  * @param {XLSX.WorkSheet} sheet
+ * @returns {TYear}
  */
 export default function GetYears(sheet) {
   // Get last column cell letter with data
