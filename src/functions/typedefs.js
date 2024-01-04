@@ -24,4 +24,7 @@
  * @prop {string} fileName
  * @prop {TParsedSheets[]} parsedSheets
  * @prop {boolean} disableColors
+ *
+ * @typedef {import('xlsx').WorkSheet} TWorkSheet
+ * @typedef {import("pdfmake/interfaces").TDocumentDefinitions} TDocumentDefinitions
  */

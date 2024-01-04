@@ -49,7 +49,7 @@ DOM.inputFile.addEventListener("change", async () => {
     /** @type {TParsedSheets[]} */
     const parsedSheets = [];
 
-    /** @type {TYear | []} */
+    /** @type {TYear[]} */
     let years = null;
 
     for (let sheetName of workbook.SheetNames) {
@@ -60,7 +60,8 @@ DOM.inputFile.addEventListener("change", async () => {
 
       // Check if the sheet contains unscheduled subjects
       // This might breaks in the future depending on the sheet cell arrangement
-      if (workbook.Sheets[sheetName]["A1"].t !== "z") {
+      const firstCell = workbook.Sheets[sheetName]["A1"];
+      if (firstCell.t !== "z" && isNaN(sheetName.charAt(0))) {
         const unscheduled = ParseUnscheduledSubjects(
           workbook.Sheets[sheetName],
           years

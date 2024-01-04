@@ -1,8 +1,7 @@
-// eslint-disable-next-line no-unused-vars
-import * as XLSX from "xlsx";
+import "./typedefs";
 /**
  * Returns starting points of large cells in a sheet from !mergers
- * @param {XLSX.WorkSheet} sheet
+ * @param {TWorkSheet} sheet
  * @param {number} locationRow
  */
 export default function GetLargeCells(sheet, locationRow) {

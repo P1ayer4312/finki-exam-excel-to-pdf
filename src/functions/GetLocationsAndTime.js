@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import "./typedefs";
 /**
- * @param {XLSX.WorkSheet} sheet
+ * @param {TWorkSheet} sheet
  * @returns {TLocationsAndTime}
  */
 export default function GetLocationsAndTime(sheet) {

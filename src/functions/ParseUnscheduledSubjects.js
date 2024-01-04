@@ -1,10 +1,8 @@
-// eslint-disable-next-line no-unused-vars
-import * as XLSX from "xlsx";
 import "./typedefs";
 import GetYearByColor from "./GetYearByColor";
 /**
  * Parse unscheduled subjects
- * @param {XLSX.WorkSheet} sheet
+ * @param {TWorkSheet} sheet
  * @param {TYear[]} years
  * @returns {TSubject[]}
  */
@@ -28,13 +26,13 @@ function ParseUnscheduledSubjects(sheet, years) {
         const subjectYear = GetYearByColor(years, item.s.fgColor.rgb);
         subjects[index] = {
           name: item.v,
-          locations: null,
+          locations: [],
           time: null,
           year: subjectYear.year,
           yearColor: subjectYear.color,
         };
       } else if (subjects[index]) {
-        subjects[index].locations = [item.v];
+        subjects[index].locations.push(item.v);
       }
     });
 

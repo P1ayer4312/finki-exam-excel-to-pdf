@@ -57,7 +57,7 @@ export default function CreatePDF(data) {
         }
 
         subjectBuilder.push({
-          text: subject.locations?.length ? subject.locations.join(", ") : "",
+          text: subject.locations.join(", ") || "",
           style: "subject",
           unbreakable: true,
           colSpan: time === null ? 2 : undefined,
@@ -67,6 +67,7 @@ export default function CreatePDF(data) {
       });
   });
 
+  /** @type {TDocumentDefinitions} */
   const docDefinition = {
     content: [
       {
@@ -103,6 +104,24 @@ export default function CreatePDF(data) {
         },
       },
     ],
+    footer: (currentPage, pageCount) => {
+      if (currentPage === pageCount) {
+        return {
+          columns: [
+            {
+              text: "Conversion tool",
+              link: "https://p1ayer4312.github.io/exam-excel-to-pdf/",
+              alignment: "left",
+              marginLeft: 40,
+              fontSize: 10,
+              color: "#0000FF",
+            },
+          ],
+        };
+      }
+
+      return null;
+    },
     styles: {
       title: {
         alignment: "center",
