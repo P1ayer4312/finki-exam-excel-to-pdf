@@ -28,8 +28,8 @@ function ParseUnscheduledSubjects(sheet, years) {
           name: item.v,
           locations: [],
           time: null,
-          year: subjectYear.year,
-          yearColor: subjectYear.color,
+          year: subjectYear?.year ?? "-",
+          yearColor: subjectYear?.color ?? "FFFFFF",
         };
       } else if (subjects[index]) {
         subjects[index].locations.push(item.v);

@@ -114,8 +114,8 @@ DOM.inputFile.addEventListener("change", async () => {
 
         const subject = {
           name: currentCell.w,
-          year: subjectYear.year,
-          yearColor: subjectYear.color,
+          year: subjectYear?.year ?? "-",
+          yearColor: subjectYear?.color ?? "FFFFFF",
           locations: Array.from(new Set(subjectLocations)),
           time: subjectTimeRange,
         };
