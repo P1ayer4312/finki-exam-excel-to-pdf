@@ -10,7 +10,8 @@ export default function GetYears(sheet) {
   // the years completely. Can't be bothered with this shit anymore.
 
   // Check 1: Get the table width from the table header
-  const lastTableColLetter = sheet["A1"].range.end.charCodeAt(0);
+  const lastTableColLetter =
+    sheet["A1"]?.range?.end?.charCodeAt(0) ?? "A".charCodeAt();
   let cellKeys = Object.keys(sheet)
     .filter(
       (key) => !key.startsWith("!") && key.charCodeAt(0) > lastTableColLetter
@@ -22,7 +23,6 @@ export default function GetYears(sheet) {
 
   // Check 2: Try to find the year cells by text value
   if (cellKeys.length !== 4) {
-    console.log("plan b");
     cellKeys = Object.keys(sheet).filter(
       (key) =>
         !key.startsWith("!") && sheet[key].w?.toLowerCase().includes("годин")
