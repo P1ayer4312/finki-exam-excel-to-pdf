@@ -22,7 +22,7 @@ function ParseUnscheduledSubjects(sheet, years) {
       const index = Number(key.slice(1));
       const item = sheet[key];
 
-      if (!subjects[index]) {
+      if (!subjects[index] && typeof item.s?.fgColor?.rgb === "string") {
         const subjectYear = GetYearByColor(years, item.s.fgColor.rgb);
         subjects[index] = {
           name: item.v,
@@ -31,7 +31,7 @@ function ParseUnscheduledSubjects(sheet, years) {
           year: subjectYear?.year ?? "-",
           yearColor: subjectYear?.color ?? "FFFFFF",
         };
-      } else if (subjects[index]) {
+      } else if (subjects[index] && item.v) {
         subjects[index].locations.push(item.v);
       }
     });
