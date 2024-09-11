@@ -1,5 +1,4 @@
-# Excel to PDF converter for exam schedules
-## Website Link
+## Excel to PDF converter for exam schedules
 [https://p1ayer4312.github.io/exam-excel-to-pdf/](https://p1ayer4312.github.io/exam-excel-to-pdf/)
 
 ## Development
