@@ -1,6 +1,5 @@
 import * as XLSX from "xlsx";
 import * as fs from "node:fs/promises";
-import fetch from "node-fetch";
 import ConvertMergesToCellData from "./src/functions/ConvertMergesToCellData.js";
 import GetYears from "./src/functions/GetYears.js";
 import ParseUnscheduledSubjects from "./src/functions/ParseUnscheduledSubjects.js";
