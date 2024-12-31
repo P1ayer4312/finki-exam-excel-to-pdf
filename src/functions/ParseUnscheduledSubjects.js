@@ -1,5 +1,4 @@
-import "./typedefs";
-import GetYearByColor from "./GetYearByColor";
+import GetYearByColor from "./GetYearByColor.js";
 /**
  * Parse unscheduled subjects
  * @param {TWorkSheet} sheet

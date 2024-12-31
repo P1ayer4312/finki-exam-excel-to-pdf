@@ -1,19 +1,18 @@
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
-import "./typedefs";
+
 /**
  * Generate PDF
  * @param {TPdfProps} data
  */
-export default function CreatePDF(data) {
+export default async function CreatePDF(data) {
   // eslint-disable-next-line no-import-assign
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
   const fileName = data.fileName;
   const parsedSheets = data.parsedSheets;
   const subjectsRows = [];
   parsedSheets.forEach((el) => {
-    const dayRowTitle =
-      el.sheetTitle.length > 0 ? el.sheetTitle.join("\n") : el.sheetName;
+    const dayRowTitle = el.sheetTitle.length > 0 ? el.sheetTitle.join("\n") : el.sheetName;
 
     subjectsRows.push([
       {
@@ -32,10 +31,7 @@ export default function CreatePDF(data) {
       .forEach((subject) => {
         let time = null;
         if (subject.time !== null) {
-          time =
-            subject.time.length > 1
-              ? `${subject.time.at(0)}-${subject.time.at(-1)}`
-              : subject.time[0];
+          time = subject.time.length > 1 ? `${subject.time.at(0)}-${subject.time.at(-1)}` : subject.time[0];
         }
 
         const subjectBuilder = [
@@ -85,12 +81,7 @@ export default function CreatePDF(data) {
               {},
               {},
             ],
-            [
-              { text: fileName, colSpan: 4, style: "documentTitle" },
-              {},
-              {},
-              {},
-            ],
+            [{ text: fileName, colSpan: 4, style: "documentTitle" }, {}, {}, {}],
             // ==
             [
               { text: "Предмет", style: "infoHeader" },
@@ -151,7 +142,9 @@ export default function CreatePDF(data) {
   };
 
   // Create and download pdf file
-  pdfMake.createPdf(docDefinition).download(`${fileName.trim()}.pdf`);
+  return new Promise((resolve) => {
+    pdfMake.createPdf(docDefinition).getBuffer(resolve);
+  });
 
   // Debug pdf, open in new window instead of downloading
   // let win = window.open("", "_blank");

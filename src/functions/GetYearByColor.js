@@ -1,5 +1,5 @@
-import hexColorDelta from "./hexColorDelta";
-import "./typedefs";
+import hexColorDelta from "./hexColorDelta.js";
+
 /**
  * Find appropriate year based on color
  * @param {TYear[]} years
@@ -15,9 +15,7 @@ function GetYearByColor(years, color) {
       return hexColorDelta(el.color, color);
     });
 
-    const closestColorIndex = colorDeltaArray.indexOf(
-      Math.max(...colorDeltaArray)
-    );
+    const closestColorIndex = colorDeltaArray.indexOf(Math.max(...colorDeltaArray));
     tempYear = years[closestColorIndex];
   }
 

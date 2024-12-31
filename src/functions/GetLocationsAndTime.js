@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import "./typedefs";
+
 /**
  * @param {TWorkSheet} sheet
  * @returns {TLocationsAndTime}

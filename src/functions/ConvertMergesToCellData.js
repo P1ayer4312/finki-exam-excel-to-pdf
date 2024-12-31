@@ -1,4 +1,3 @@
-import "./typedefs";
 /**
  * Convert merges to get informations about cell width and height,
  * start and end cell; and add them to the original cells
