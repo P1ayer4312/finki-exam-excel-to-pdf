@@ -4,8 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "node ./esbuid_config/build.js",
-    "watch": "node ./esbuid_config/watch.js"
+    "build": "node ./esbuild_config/build.js",
+    "watch": "node ./esbuild_config/watch.js"
   },
   "type": "module",
   "keywords": [],

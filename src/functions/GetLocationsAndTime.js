@@ -24,7 +24,7 @@ export default function GetLocationsAndTime(sheet) {
   for (let row of sheetJson) {
     // Find the locations array
     if (!locationsRowFound && row[0] === "EMPTY") {
-      const rowPatched = row;
+      const rowPatched = row.map((el) => el.replace(/(\r\n|\n|\r)|(\s\r\n|\s\n|\s\r)/gm, " "));
 
       // Fill empty spots with previous location, skip the first one
       for (let n = 1; n < rowPatched.length - 2; ++n) {

@@ -62,10 +62,7 @@ DOM.inputFile.addEventListener("change", async () => {
       // This might breaks in the future depending on the sheet cell arrangement
       const firstCell = workbook.Sheets[sheetName]["A1"];
       if (firstCell.t !== "z" && isNaN(sheetName.charAt(0))) {
-        const unscheduled = ParseUnscheduledSubjects(
-          workbook.Sheets[sheetName],
-          years
-        );
+        const unscheduled = ParseUnscheduledSubjects(workbook.Sheets[sheetName], years);
 
         parsedSheets.push({
           sheetName,
@@ -78,16 +75,14 @@ DOM.inputFile.addEventListener("change", async () => {
 
       const locationAndTime = GetLocationsAndTime(workbook.Sheets[sheetName]);
 
-      const largeCells = GetLargeCells(
-        workbook.Sheets[sheetName],
-        locationAndTime.locationRow
-      );
+      const largeCells = GetLargeCells(workbook.Sheets[sheetName], locationAndTime.locationRow);
 
       const subjectsData = [];
       for (let cell of largeCells) {
         const currentCell = workbook.Sheets[sheetName][cell];
         if (
           cell.startsWith("A") ||
+          !currentCell.w ||
           currentCell.w === "." ||
           currentCell.w.length < 3 ||
           currentCell.s.patternType !== "solid" // Check if it's colored
@@ -105,8 +100,7 @@ DOM.inputFile.addEventListener("change", async () => {
           subjectRowOffset + currentCell.range.width
         );
 
-        const timeRowOffset =
-          currentCell.range.rowStart - locationAndTime.locationRow - 2;
+        const timeRowOffset = currentCell.range.rowStart - locationAndTime.locationRow - 2;
         const subjectTimeRange = locationAndTime.time.slice(
           timeRowOffset,
           timeRowOffset + currentCell.range.height
@@ -146,7 +140,7 @@ DOM.inputFile.addEventListener("change", async () => {
     // ===
   } catch (error) {
     console.error(error);
-    DOM.setStatus("Error ocurred");
+    DOM.setStatus("Error occurred");
     DOM.showError(error.stack.replaceAll("\n", "<br>"));
   }
 });
