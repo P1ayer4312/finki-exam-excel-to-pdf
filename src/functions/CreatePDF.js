@@ -12,8 +12,7 @@ export default function CreatePDF(data) {
   const parsedSheets = data.parsedSheets;
   const subjectsRows = [];
   parsedSheets.forEach((el) => {
-    const dayRowTitle =
-      el.sheetTitle.length > 0 ? el.sheetTitle.join("\n") : el.sheetName;
+    const dayRowTitle = el.sheetTitle.length > 0 ? el.sheetTitle.join("\n") : el.sheetName;
 
     subjectsRows.push([
       {
@@ -32,10 +31,7 @@ export default function CreatePDF(data) {
       .forEach((subject) => {
         let time = null;
         if (subject.time !== null) {
-          time =
-            subject.time.length > 1
-              ? `${subject.time.at(0)}-${subject.time.at(-1)}`
-              : subject.time[0];
+          time = subject.time.length > 1 ? `${subject.time.at(0)}-${subject.time.at(-1)}` : subject.time[0];
         }
 
         const subjectBuilder = [
@@ -85,12 +81,7 @@ export default function CreatePDF(data) {
               {},
               {},
             ],
-            [
-              { text: fileName, colSpan: 4, style: "documentTitle" },
-              {},
-              {},
-              {},
-            ],
+            [{ text: fileName, colSpan: 4, style: "documentTitle" }, {}, {}, {}],
             // ==
             [
               { text: "Предмет", style: "infoHeader" },

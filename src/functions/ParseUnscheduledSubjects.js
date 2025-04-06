@@ -22,13 +22,13 @@ function ParseUnscheduledSubjects(sheet, years) {
       const index = Number(key.slice(1));
       const item = sheet[key];
 
-      if (!subjects[index] && typeof item.s?.fgColor?.rgb === "string") {
-        const subjectYear = GetYearByColor(years, item.s.fgColor.rgb);
+      if (!subjects[index] && (typeof item.s?.fgColor?.rgb === "string" || item.t === "s")) {
+        const subjectYear = item.s?.fgColor?.rgb ? GetYearByColor(years, item.s.fgColor.rgb) : undefined;
         subjects[index] = {
           name: item.v,
           locations: [],
           time: null,
-          year: subjectYear?.year ?? "-",
+          year: subjectYear?.year ?? "---",
           yearColor: subjectYear?.color ?? "FFFFFF",
         };
       } else if (subjects[index] && item.v) {
