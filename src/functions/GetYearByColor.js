@@ -7,6 +7,10 @@ import "./typedefs";
  * @returns {TYear}
  */
 function GetYearByColor(years, color) {
+  if (color === "FFFFFF") {
+    return null;
+  }
+
   let tempYear = years.find((el) => el.color === color);
   if (!tempYear) {
     // Years colors and cell colors are different shade
@@ -15,9 +19,7 @@ function GetYearByColor(years, color) {
       return hexColorDelta(el.color, color);
     });
 
-    const closestColorIndex = colorDeltaArray.indexOf(
-      Math.max(...colorDeltaArray)
-    );
+    const closestColorIndex = colorDeltaArray.indexOf(Math.max(...colorDeltaArray));
     tempYear = years[closestColorIndex];
   }
 

@@ -25,7 +25,7 @@ function ParseUnscheduledSubjects(sheet, years) {
       if (!subjects[index] && (typeof item.s?.fgColor?.rgb === "string" || item.t === "s")) {
         const subjectYear = item.s?.fgColor?.rgb ? GetYearByColor(years, item.s.fgColor.rgb) : undefined;
         subjects[index] = {
-          name: item.v,
+          name: item.v.replace(/(\r\n|\n|\r)|(\s\r\n|\s\n|\s\r)/gm, " "),
           locations: [],
           time: null,
           year: subjectYear?.year ?? "---",
