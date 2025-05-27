@@ -85,7 +85,7 @@ DOM.inputFile.addEventListener("change", async () => {
           !currentCell.w ||
           currentCell.w === "." ||
           currentCell.w.length < 3 ||
-          currentCell.s.patternType !== "solid" // Check if it's colored
+          currentCell.s?.patternType !== "solid" // Check if it's colored
         ) {
           // Skip cell if it's not a subject
           continue;
@@ -107,7 +107,7 @@ DOM.inputFile.addEventListener("change", async () => {
         );
 
         const subject = {
-          name: currentCell.w,
+          name: currentCell.w?.replace(/(\r\n|\n|\r)|(\s\r\n|\s\n|\s\r)/gm, " "),
           year: subjectYear?.year ?? "-",
           yearColor: subjectYear?.color ?? "FFFFFF",
           locations: Array.from(new Set(subjectLocations)),
@@ -119,7 +119,12 @@ DOM.inputFile.addEventListener("change", async () => {
 
       const sheetTitle = [];
       for (let n = 1; n <= locationAndTime.locationRow; n++) {
-        sheetTitle.push(workbook.Sheets[sheetName][`A${n}`].w);
+        let title = workbook.Sheets[sheetName][`A${n}`].w;
+        if (!title || title?.length === 0) {
+          title = sheetName;
+        }
+
+        sheetTitle.push(title);
       }
 
       parsedSheets.push({

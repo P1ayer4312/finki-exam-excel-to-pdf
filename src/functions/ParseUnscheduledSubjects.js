@@ -22,10 +22,16 @@ function ParseUnscheduledSubjects(sheet, years) {
       const index = Number(key.slice(1));
       const item = sheet[key];
 
-      if (!subjects[index] && (typeof item.s?.fgColor?.rgb === "string" || item.t === "s")) {
+      if (
+        !subjects[index] &&
+        item.v &&
+        !item.v?.length !== 0 &&
+        !item.v?.includes("договор") &&
+        (typeof item.s?.fgColor?.rgb === "string" || item.t === "s")
+      ) {
         const subjectYear = item.s?.fgColor?.rgb ? GetYearByColor(years, item.s.fgColor.rgb) : undefined;
         subjects[index] = {
-          name: item.v.replace(/(\r\n|\n|\r)|(\s\r\n|\s\n|\s\r)/gm, " "),
+          name: item.v?.replace(/(\r\n|\n|\r)|(\s\r\n|\s\n|\s\r)/gm, " "),
           locations: [],
           time: null,
           year: subjectYear?.year ?? "---",
