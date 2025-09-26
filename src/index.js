@@ -58,10 +58,15 @@ DOM.inputFile.addEventListener("change", async () => {
         years = GetYears(workbook.Sheets[sheetName]);
       }
 
+      if (!workbook.Sheets[sheetName]["!ref"]) {
+        // Empty sheet
+        continue;
+      }
+
       // Check if the sheet contains unscheduled subjects
       // This might breaks in the future depending on the sheet cell arrangement
       const firstCell = workbook.Sheets[sheetName]["A1"];
-      if (firstCell.t !== "z" && isNaN(sheetName.charAt(0))) {
+      if (firstCell?.t !== "z" && isNaN(sheetName.charAt(0))) {
         const unscheduled = ParseUnscheduledSubjects(workbook.Sheets[sheetName], years);
 
         parsedSheets.push({
