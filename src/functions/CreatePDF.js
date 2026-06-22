@@ -6,8 +6,6 @@ import "./typedefs";
  * @param {TPdfProps} data
  */
 export default function CreatePDF(data) {
-  // eslint-disable-next-line no-import-assign
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
   const fileName = data.fileName;
   const parsedSheets = data.parsedSheets;
   const subjectsRows = [];

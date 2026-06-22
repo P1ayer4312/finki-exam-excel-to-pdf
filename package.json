@@ -15,8 +15,8 @@
     "eslint": "^8.42.0"
   },
   "dependencies": {
-    "esbuild": "0.18.0",
-    "pdfmake": "^0.2.7",
+    "esbuild": "0.28.1",
+    "pdfmake": "^0.2.20",
     "xlsx": "^0.18.5"
   }
 }

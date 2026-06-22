@@ -26,7 +26,7 @@ function ParseUnscheduledSubjects(sheet, years) {
         !subjects[index] &&
         item.v &&
         !item.v?.length !== 0 &&
-        !item.v?.includes("договор") &&
+        !item.v?.includes?.("договор") &&
         (typeof item.s?.fgColor?.rgb === "string" || item.t === "s")
       ) {
         const subjectYear = item.s?.fgColor?.rgb ? GetYearByColor(years, item.s.fgColor.rgb) : undefined;

@@ -53,6 +53,11 @@ DOM.inputFile.addEventListener("change", async () => {
     let years = null;
 
     for (let sheetName of workbook.SheetNames) {
+      if (sheetName.startsWith("b-")) {
+        // Exclude weird data, idk what it's used for
+        continue;
+      }
+
       // Set year colors
       if (years === null) {
         years = GetYears(workbook.Sheets[sheetName]);
@@ -102,13 +107,13 @@ DOM.inputFile.addEventListener("change", async () => {
         const subjectRowOffset = currentCell.range.colStart - 1;
         const subjectLocations = locationAndTime.locations.slice(
           subjectRowOffset,
-          subjectRowOffset + currentCell.range.width
+          subjectRowOffset + currentCell.range.width,
         );
 
         const timeRowOffset = currentCell.range.rowStart - locationAndTime.locationRow - 2;
         const subjectTimeRange = locationAndTime.time.slice(
           timeRowOffset,
-          timeRowOffset + currentCell.range.height
+          timeRowOffset + currentCell.range.height,
         );
 
         const subject = {
